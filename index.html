@@ -1,0 +1,2244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AirDosa — AI-Powered Instant Drone Dosa Delivery</title>
+  <meta name="description" content="Get hot, crispy dosas delivered to your balcony in minutes. AI-optimized baking thermal pods, hypersonic drones, and precision drops. Ghee at Mach 0.8.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* --------------------------------------------------
+       DESIGN SYSTEM & VARIABLES
+       -------------------------------------------------- */
+    :root {
+      --primary: #FF9F1C; /* Crispy Amber */
+      --primary-rgb: 255, 159, 28;
+      --secondary: #00F2FE; /* Aero Tech Cyan */
+      --secondary-rgb: 0, 242, 254;
+      --bg-deep: #07080B; /* Cosmic Black */
+      --bg-card: #0F111A; /* Premium Dark Navy */
+      --bg-card-hover: #151824;
+      --text-light: #F4F6F9;
+      --text-muted: #8E9BAE;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(0, 242, 254, 0.25);
+      --accent-green: #39FF14; /* Active Neon Green */
+      --glow-shadow-primary: 0 0 25px rgba(255, 159, 28, 0.45);
+      --glow-shadow-secondary: 0 0 25px rgba(0, 242, 254, 0.45);
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      background-color: var(--bg-deep);
+      color: var(--text-light);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100vh;
+      line-height: 1.6;
+      background: 
+        radial-gradient(circle at 10% 20%, rgba(255, 159, 28, 0.04) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0, 242, 254, 0.04) 0%, transparent 40%),
+        var(--bg-deep);
+      position: relative;
+    }
+
+    /* Grid overlay for tech look */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.007) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.007) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Typography */
+    h1, h2, h3, h4 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.8rem;
+      border-radius: 50px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      border: 1px solid transparent;
+      outline: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), #FF7A00);
+      color: #000;
+      box-shadow: 0 4px 15px rgba(255, 159, 28, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--glow-shadow-primary);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-light);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(10px);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* --------------------------------------------------
+       SCROLL REVEAL ANIMATIONS
+       -------------------------------------------------- */
+    .reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .delay-1 { transition-delay: 0.15s; }
+    .delay-2 { transition-delay: 0.3s; }
+    .delay-3 { transition-delay: 0.45s; }
+
+    /* --------------------------------------------------
+       HEADER / NAVBAR
+       -------------------------------------------------- */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      padding: 1.25rem 0;
+      transition: var(--transition-smooth);
+    }
+
+    .header.scrolled {
+      background: rgba(7, 8, 11, 0.75);
+      backdrop-filter: blur(15px);
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-light);
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .logo-icon {
+      color: var(--primary);
+      animation: logo-float 3s ease-in-out infinite;
+    }
+
+    .logo span {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+      font-size: 0.95rem;
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: var(--transition-smooth);
+    }
+
+    .nav-link:hover {
+      color: var(--text-light);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      border: 1px solid rgba(255, 159, 28, 0.4);
+      background: rgba(255, 159, 28, 0.05);
+      color: var(--primary);
+      padding: 0.6rem 1.25rem;
+      border-radius: 30px;
+      font-size: 0.9rem;
+    }
+
+    .nav-cta:hover {
+      background: var(--primary);
+      color: #000;
+      box-shadow: 0 0 15px rgba(255, 159, 28, 0.3);
+      transform: translateY(-1px);
+    }
+
+    /* Mobile Nav Toggle */
+    .menu-toggle {
+      display: none;
+      color: var(--text-light);
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    /* --------------------------------------------------
+       HERO SECTION
+       -------------------------------------------------- */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding-top: 100px;
+      padding-bottom: 50px;
+      overflow: hidden;
+    }
+
+    .hero-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 4rem;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 159, 28, 0.08);
+      border: 1px solid rgba(255, 159, 28, 0.25);
+      color: var(--primary);
+      padding: 0.4rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .hero-badge i {
+      width: 14px;
+      height: 14px;
+    }
+
+    .hero-title {
+      font-size: 3.75rem;
+      line-height: 1.15;
+      font-weight: 800;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, var(--primary) 30%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .hero-description {
+      font-size: 1.15rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    /* Hero Interactive Drone Graphic */
+    .hero-graphic {
+      position: relative;
+      width: 100%;
+      height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radar-circle {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px dashed rgba(0, 242, 254, 0.12);
+      pointer-events: none;
+      animation: radar-spin 60s linear infinite;
+    }
+
+    .radar-circle-1 { width: 420px; height: 420px; }
+    .radar-circle-2 { width: 300px; height: 300px; border-style: solid; border-color: rgba(255, 159, 28, 0.05); }
+    .radar-circle-3 { width: 180px; height: 180px; }
+
+    .radar-sweep {
+      position: absolute;
+      width: 420px;
+      height: 420px;
+      background: conic-gradient(from 0deg, rgba(0, 242, 254, 0.15) 0deg, transparent 90deg, transparent 360deg);
+      border-radius: 50%;
+      animation: radar-sweep 6s linear infinite;
+      pointer-events: none;
+    }
+
+    .drone-wrapper {
+      position: relative;
+      animation: float-drone 4s ease-in-out infinite;
+      z-index: 5;
+    }
+
+    /* Pure CSS Drone Design */
+    .drone-svg {
+      width: 320px;
+      height: auto;
+      filter: drop-shadow(0 15px 25px rgba(0,0,0,0.5));
+    }
+
+    .propeller {
+      transform-origin: center;
+      animation: spin-propeller 0.1s linear infinite;
+    }
+
+    .prop-left { transform-origin: 30px 42px; }
+    .prop-right { transform-origin: 290px 42px; }
+    .prop-rear-left { transform-origin: 50px 118px; }
+    .prop-rear-right { transform-origin: 270px 118px; }
+
+    .steam-line {
+      stroke-dasharray: 20;
+      animation: steam-drift 2s linear infinite;
+      transform-origin: bottom center;
+    }
+
+    /* Live Telemetry Display Block */
+    .telemetry-overlay {
+      position: absolute;
+      bottom: 20px;
+      left: 10px;
+      background: var(--glass-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.9rem 1.2rem;
+      backdrop-filter: blur(12px);
+      font-size: 0.8rem;
+      font-family: 'Courier New', monospace;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      z-index: 10;
+      animation: float-telemetry 4.5s ease-in-out infinite;
+    }
+
+    .telemetry-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .telemetry-val {
+      color: var(--secondary);
+      font-weight: bold;
+    }
+
+    .pulsing-indicator {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background-color: var(--accent-green);
+      border-radius: 50%;
+      margin-right: 0.4rem;
+      box-shadow: 0 0 10px var(--accent-green);
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    /* Keyframes */
+    @keyframes logo-float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-5px) rotate(5deg); }
+    }
+
+    @keyframes float-drone {
+      0%, 100% { transform: translateY(0px) rotate(1deg); }
+      50% { transform: translateY(-15px) rotate(-1deg); }
+    }
+
+    @keyframes float-telemetry {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    @keyframes spin-propeller {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes steam-drift {
+      0% {
+        stroke-dashoffset: 40;
+        opacity: 0;
+      }
+      50% {
+        opacity: 0.6;
+      }
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+      }
+    }
+
+    @keyframes radar-sweep {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes radar-spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(-360deg); }
+    }
+
+    @keyframes pulse-dot {
+      0% { transform: scale(0.9); opacity: 0.6; }
+      50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px var(--accent-green); }
+      100% { transform: scale(0.9); opacity: 0.6; }
+    }
+
+    /* --------------------------------------------------
+       FEATURES SECTION
+       -------------------------------------------------- */
+    .section {
+      padding: 100px 0;
+      position: relative;
+    }
+
+    .section-header {
+      max-width: 600px;
+      margin: 0 auto 4rem auto;
+      text-align: center;
+      padding: 0 1.5rem;
+    }
+
+    .section-badge {
+      color: var(--secondary);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin-bottom: 0.8rem;
+      display: inline-block;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .features-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    /* Card styling */
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 20px;
+      padding: 3rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: var(--transition-smooth);
+    }
+
+    /* Glowing gradient borders */
+    .feature-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(300px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(0, 242, 254, 0.08), transparent 80%);
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--border-hover);
+      box-shadow: 0 10px 30px rgba(0, 242, 254, 0.05);
+    }
+
+    .card-icon-wrapper {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: rgba(0, 242, 254, 0.05);
+      border: 1px solid rgba(0, 242, 254, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+      color: var(--secondary);
+      transition: var(--transition-smooth);
+    }
+
+    .feature-card:hover .card-icon-wrapper {
+      background: var(--secondary);
+      color: #000;
+      box-shadow: var(--glow-shadow-secondary);
+      transform: scale(1.05) rotate(5deg);
+    }
+
+    .feature-card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+      color: var(--text-light);
+    }
+
+    .feature-card p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* --------------------------------------------------
+       PRICING SECTION
+       -------------------------------------------------- */
+    .pricing-grid {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2.5rem;
+      align-items: stretch;
+    }
+
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 3.5rem 3rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: var(--transition-smooth);
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(255, 159, 28, 0.2);
+    }
+
+    /* Premium highlight styling */
+    .pricing-card.premium {
+      background: linear-gradient(180deg, rgba(15, 17, 26, 1) 0%, rgba(20, 23, 36, 1) 100%);
+      border: 1px solid rgba(255, 159, 28, 0.35);
+      box-shadow: 0 8px 30px rgba(255, 159, 28, 0.05);
+    }
+
+    .pricing-card.premium::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, var(--primary), var(--secondary));
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    .badge-popular {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: linear-gradient(135deg, var(--primary), #FF7A00);
+      color: #000;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 0.35rem 0.9rem;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      box-shadow: var(--glow-shadow-primary);
+    }
+
+    .plan-header {
+      margin-bottom: 2rem;
+    }
+
+    .plan-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-light);
+      margin-bottom: 0.5rem;
+    }
+
+    .pricing-card.premium .plan-name {
+      color: var(--primary);
+    }
+
+    .plan-description {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      min-height: 45px;
+    }
+
+    .plan-price {
+      font-family: 'Outfit', sans-serif;
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--text-light);
+      margin: 1.5rem 0;
+      display: flex;
+      align-items: baseline;
+      gap: 0.3rem;
+    }
+
+    .plan-price span {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .plan-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      color: var(--text-light);
+    }
+
+    .plan-features i {
+      color: var(--secondary);
+      flex-shrink: 0;
+    }
+
+    .pricing-card.premium .plan-features i {
+      color: var(--primary);
+    }
+
+    .pricing-card .btn {
+      width: 100%;
+    }
+
+    /* --------------------------------------------------
+       FOOTER
+       -------------------------------------------------- */
+    .footer {
+      background: #040507;
+      border-top: 1px solid var(--border-color);
+      padding: 80px 0 40px 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      position: relative;
+      z-index: 10;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 1.5fr repeat(3, 1fr);
+      gap: 4rem;
+      margin-bottom: 4rem;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .footer-logo span {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .footer-desc {
+      line-height: 1.6;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .social-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+    }
+
+    .social-icon:hover {
+      background: var(--secondary);
+      color: #000;
+      border-color: var(--secondary);
+      transform: translateY(-3px);
+    }
+
+    .footer-col h4 {
+      color: #fff;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .footer-link {
+      transition: var(--transition-smooth);
+    }
+
+    .footer-link:hover {
+      color: var(--secondary);
+      padding-left: 4px;
+    }
+
+    .footer-newsletter p {
+      margin-bottom: 1rem;
+    }
+
+    .newsletter-form {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .newsletter-input {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      font-family: inherit;
+      outline: none;
+      transition: var(--transition-smooth);
+    }
+
+    .newsletter-input:focus {
+      border-color: var(--secondary);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    .newsletter-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: none;
+      color: #000;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .newsletter-btn:hover {
+      transform: scale(1.05);
+      box-shadow: var(--glow-shadow-primary);
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 0 1.5rem;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+    }
+
+    .footer-egg {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .footer-egg i {
+      color: #e25555;
+      animation: heartbeat 1.5s infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.15); }
+    }
+
+    /* --------------------------------------------------
+       FLOATING ORDER BUTTON
+       -------------------------------------------------- */
+    .floating-cta {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      z-index: 90;
+      background: linear-gradient(135deg, var(--primary), #FF7A00);
+      color: #000;
+      border-radius: 50px;
+      padding: 0.9rem 1.7rem;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      box-shadow: 0 10px 25px rgba(255, 159, 28, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      animation: gentle-bounce 3s ease-in-out infinite;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .floating-cta:hover {
+      transform: scale(1.05) translateY(-3px);
+      box-shadow: 0 15px 35px rgba(255, 159, 28, 0.6);
+      background: linear-gradient(135deg, #FFB03A, #FF8C1A);
+    }
+
+    .floating-cta i {
+      animation: hover-wobble 2s linear infinite;
+    }
+
+    @keyframes gentle-bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes hover-wobble {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-8deg); }
+      75% { transform: rotate(8deg); }
+    }
+
+    /* --------------------------------------------------
+       INTERACTIVE MODAL (DOSA CONFIGURATOR)
+       -------------------------------------------------- */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(4, 5, 7, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.4s ease;
+      padding: 1.5rem;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal-container {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+      transform: scale(0.95) translateY(20px);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+    }
+
+    .modal-backdrop.open .modal-container {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+      z-index: 20;
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.08);
+      color: #fff;
+    }
+
+    /* Configurator Step 1 Content */
+    .modal-step-1 {
+      padding: 3rem;
+    }
+
+    .modal-title {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .modal-subtitle {
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      font-size: 0.95rem;
+    }
+
+    .form-group {
+      margin-bottom: 2rem;
+    }
+
+    .form-label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+      font-size: 0.95rem;
+    }
+
+    /* Option Grid cards */
+    .option-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .option-card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .option-card i {
+      color: var(--text-muted);
+      transition: var(--transition-smooth);
+    }
+
+    .option-card:hover {
+      background: rgba(255,255,255,0.04);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .option-card.selected {
+      background: rgba(255, 159, 28, 0.08);
+      border-color: var(--primary);
+    }
+
+    .option-card.selected i {
+      color: var(--primary);
+    }
+
+    .option-card-title {
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    /* Slider styling */
+    .slider-container {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+    }
+
+    .slider-metrics {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .crisp-level-tag {
+      color: var(--primary);
+      text-shadow: 0 0 10px rgba(255, 159, 28, 0.3);
+    }
+
+    .custom-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 5px;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+      margin: 1rem 0 0.5rem 0;
+    }
+
+    .custom-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(255, 159, 28, 0.5);
+      transition: transform 0.1s;
+    }
+
+    .custom-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.25);
+    }
+
+    /* Payload checkboxes */
+    .chutney-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .chutney-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border-color);
+      padding: 0.9rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      user-select: none;
+      transition: var(--transition-smooth);
+    }
+
+    .chutney-item input {
+      display: none;
+    }
+
+    .chutney-item.selected {
+      background: rgba(0, 242, 254, 0.08);
+      border-color: var(--secondary);
+    }
+
+    .chutney-indicator {
+      width: 16px;
+      height: 16px;
+      border-radius: 4px;
+      border: 2px solid var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+
+    .chutney-item.selected .chutney-indicator {
+      border-color: var(--secondary);
+      background: var(--secondary);
+    }
+
+    .chutney-indicator::after {
+      content: "";
+      width: 6px;
+      height: 6px;
+      background: #000;
+      border-radius: 1px;
+      display: none;
+    }
+
+    .chutney-item.selected .chutney-indicator::after {
+      display: block;
+    }
+
+    .order-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border-color);
+      padding-top: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .total-price {
+      font-size: 1.75rem;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .total-price span {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Step 2 Content: Radar Simulation */
+    .modal-step-2 {
+      display: none;
+      padding: 3rem;
+    }
+
+    .radar-map-wrapper {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background: #040508;
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+
+    /* Radar scan grid */
+    .radar-grid {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle, transparent 20%, #040508 20%, #040508 21%, transparent 21%),
+        radial-gradient(circle, transparent 40%, #040508 40%, #040508 41%, transparent 41%),
+        radial-gradient(circle, transparent 60%, #040508 60%, #040508 61%, transparent 61%),
+        linear-gradient(rgba(0, 242, 254, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 242, 254, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 100% 100%, 100% 100%, 20px 20px, 20px 20px;
+      opacity: 0.8;
+    }
+
+    /* Concentric rings */
+    .radar-ring {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(0, 242, 254, 0.1);
+      border-radius: 50%;
+    }
+    .rr-1 { width: 100px; height: 100px; }
+    .rr-2 { width: 200px; height: 200px; }
+    .rr-3 { width: 300px; height: 300px; }
+
+    .radar-sweep-simulation {
+      position: absolute;
+      width: 350px;
+      height: 350px;
+      top: 50%;
+      left: 50%;
+      transform-origin: top left;
+      background: conic-gradient(from 0deg, rgba(0, 242, 254, 0.12) 0deg, transparent 70deg, transparent 360deg);
+      border-radius: 50%;
+      animation: radar-sweep 4s linear infinite;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Flight Path SVG */
+    .flight-path-svg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+
+    .flight-path-line {
+      stroke: var(--secondary);
+      stroke-dasharray: 8 4;
+      stroke-dashoffset: 0;
+      animation: dash-move 1s linear infinite;
+    }
+
+    .flight-path-draw {
+      stroke: var(--primary);
+      stroke-width: 3;
+      stroke-linecap: round;
+      fill: none;
+      stroke-dasharray: 400;
+      stroke-dashoffset: 400;
+      /* Animates dynamically via Javascript */
+    }
+
+    @keyframes dash-move {
+      to {
+        stroke-dashoffset: -12;
+      }
+    }
+
+    /* Beacon points */
+    .beacon {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: var(--primary);
+      border-radius: 50%;
+      z-index: 3;
+      transform: translate(-50%, -50%);
+    }
+
+    .beacon::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 25px;
+      height: 25px;
+      border: 1px solid var(--primary);
+      border-radius: 50%;
+      animation: pulse-beacon 1.5s infinite;
+    }
+
+    .beacon-dest {
+      background-color: var(--secondary);
+    }
+    .beacon-dest::after {
+      border-color: var(--secondary);
+    }
+
+    .beacon-label {
+      position: absolute;
+      white-space: nowrap;
+      font-size: 0.65rem;
+      background: rgba(0,0,0,0.8);
+      padding: 0.15rem 0.4rem;
+      border-radius: 3px;
+      border: 1px solid var(--border-color);
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: monospace;
+    }
+
+    .drone-sim-icon {
+      position: absolute;
+      z-index: 4;
+      transform: translate(-50%, -50%);
+      color: var(--primary);
+      filter: drop-shadow(0 0 5px rgba(255, 159, 28, 0.8));
+      display: none; /* Shows when flight starts */
+    }
+
+    @keyframes pulse-beacon {
+      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+      100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; }
+    }
+
+    /* Tech Console Output log */
+    .console-log {
+      height: 120px;
+      background: #040508;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.75rem;
+      color: #94A3B8;
+      overflow-y: auto;
+      margin-bottom: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .console-line {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .console-time {
+      color: var(--secondary);
+    }
+
+    .console-success {
+      color: var(--accent-green);
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+
+    .progress-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      transition: width 0.1s linear;
+    }
+
+    /* --------------------------------------------------
+       RESPONSIVE MEDIA QUERIES
+       -------------------------------------------------- */
+    @media (max-width: 1024px) {
+      .hero-title {
+        font-size: 3rem;
+      }
+      .features-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .hero-graphic {
+        height: 380px;
+      }
+      .radar-circle-1 { width: 340px; height: 340px; }
+      .radar-circle-2 { width: 240px; height: 240px; }
+      .radar-circle-3 { width: 140px; height: 140px; }
+      .radar-sweep { width: 340px; height: 340px; }
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+      
+      .nav-links {
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        width: 100%;
+        height: calc(100vh - 80px);
+        background: var(--bg-deep);
+        flex-direction: column;
+        justify-content: center;
+        gap: 3rem;
+        transition: var(--transition-smooth);
+        z-index: 99;
+      }
+
+      .nav-links.active {
+        left: 0;
+      }
+
+      .hero-container {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        text-align: center;
+      }
+
+      .hero-description {
+        margin: 0 auto 2rem auto;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .pricing-grid {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+      }
+
+      .footer-container {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .modal-step-1, .modal-step-2 {
+        padding: 2rem 1.5rem;
+      }
+
+      .option-grid, .chutney-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FLOATING NAVBAR -->
+  <header class="header" id="navbar">
+    <div class="nav-container">
+      <a href="#" class="logo">
+        <i data-lucide="navigation" class="logo-icon"></i>
+        <span>AirDosa</span>
+      </a>
+      <nav class="nav-links" id="navLinks">
+        <a href="#features" class="nav-link">Technology</a>
+        <a href="#pricing" class="nav-link">Subscription</a>
+        <a href="#" class="nav-link" onclick="openOrderModal(event)">Live Launcher</a>
+        <a href="#" class="btn nav-cta" onclick="openOrderModal(event)">Launch App</a>
+      </nav>
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">
+        <i data-lucide="menu" id="menuIcon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero" id="home">
+    <div class="hero-container">
+      <div class="hero-content reveal">
+        <div class="hero-badge">
+          <i data-lucide="zap"></i>
+          100% Ghee, 0% Lag — Delivering Live in Bengaluru
+        </div>
+        <h1 class="hero-title">
+          Hot, Crispy Dosas.<br>Delivered from the <span>Clouds</span>.
+        </h1>
+        <p class="hero-description">
+          Experience breakfast at hypersonic speeds. Our autonomous drones use AI-optimized thermal pods to bake your custom-crisp dosas mid-flight, dropping them onto your balcony in under 4 minutes.
+        </p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="openOrderModal(event)">
+            <i data-lucide="rocket"></i> Launch Dosa
+          </button>
+          <a href="#features" class="btn btn-secondary">
+            <i data-lucide="cpu"></i> Telemetry & Specs
+          </a>
+        </div>
+      </div>
+
+      <!-- Animated Drone Visualizer -->
+      <div class="hero-graphic reveal delay-2">
+        <div class="radar-circle radar-circle-1"></div>
+        <div class="radar-circle radar-circle-2"></div>
+        <div class="radar-circle radar-circle-3"></div>
+        <div class="radar-sweep"></div>
+        
+        <div class="drone-wrapper">
+          <!-- Pure CSS Vector Drone carrying a glowing Dosa in Pod -->
+          <svg class="drone-svg" viewBox="0 0 320 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left Propeller Arm -->
+            <path d="M70 60 L140 90" stroke="#1F2833" stroke-width="8" stroke-linecap="round"/>
+            <!-- Right Propeller Arm -->
+            <path d="M250 60 L180 90" stroke="#1F2833" stroke-width="8" stroke-linecap="round"/>
+            <!-- Rear Left Arm -->
+            <path d="M90 120 L140 100" stroke="#1F2833" stroke-width="6" stroke-linecap="round"/>
+            <!-- Rear Right Arm -->
+            <path d="M230 120 L180 100" stroke="#1F2833" stroke-width="6" stroke-linecap="round"/>
+
+            <!-- Propulsion Motors (Cyan Highlights) -->
+            <circle cx="70" cy="60" r="10" fill="#00F2FE" />
+            <circle cx="250" cy="60" r="10" fill="#00F2FE" />
+            <circle cx="90" cy="120" r="8" fill="#00F2FE" />
+            <circle cx="230" cy="120" r="8" fill="#00F2FE" />
+
+            <!-- Spinning Propellers (Animated with keyframes) -->
+            <ellipse class="propeller prop-left" cx="70" cy="42" rx="40" ry="6" stroke="rgba(0, 242, 254, 0.4)" stroke-width="2" fill="rgba(0, 242, 254, 0.05)"/>
+            <ellipse class="propeller prop-right" cx="250" cy="42" rx="40" ry="6" stroke="rgba(0, 242, 254, 0.4)" stroke-width="2" fill="rgba(0, 242, 254, 0.05)"/>
+            <ellipse class="propeller prop-rear-left" cx="90" cy="110" rx="30" ry="4" stroke="rgba(0, 242, 254, 0.3)" stroke-width="1.5" fill="rgba(0, 242, 254, 0.05)"/>
+            <ellipse class="propeller prop-rear-right" cx="230" cy="110" rx="30" ry="4" stroke="rgba(0, 242, 254, 0.3)" stroke-width="1.5" fill="rgba(0, 242, 254, 0.05)"/>
+
+            <!-- Main Drone Body (Futuristic Shield Shape) -->
+            <path d="M120 70 L200 70 L210 105 L160 125 L110 105 Z" fill="#0F111A" stroke="#2C3347" stroke-width="4" stroke-linejoin="round"/>
+            <path d="M140 70 L180 70 L190 95 L160 110 L130 95 Z" fill="#1F2438"/>
+            
+            <!-- Drone Front Eye/Sensor (Pulsing Cyan) -->
+            <rect x="150" y="80" width="20" height="8" rx="4" fill="#00F2FE" />
+            <circle cx="160" cy="84" r="2" fill="#fff" />
+
+            <!-- Active Thermal Baking Pod (Glowing Chamber hanging beneath) -->
+            <rect x="130" y="125" width="60" height="35" rx="8" fill="#1F1510" stroke="#FF9F1C" stroke-width="2"/>
+            <rect x="138" y="132" width="44" height="21" rx="4" fill="rgba(255, 159, 28, 0.15)" stroke="rgba(255, 159, 28, 0.4)" stroke-width="1"/>
+            
+            <!-- Dosa Vector Silhouette inside the heated chamber -->
+            <!-- We display a golden, rolling triangle (the dosa) -->
+            <path d="M145 146 L175 146 L160 136 Z" fill="#FF9F1C" opacity="0.9"/>
+            
+            <!-- Rising Heat Steam (SVG stroke-dasharray animation) -->
+            <path class="steam-line" d="M142 120 Q147 110 142 100" stroke="#FF9F1C" stroke-width="1.5" fill="none" opacity="0.7"/>
+            <path class="steam-line" d="M160 120 Q165 110 160 100" stroke="#FF9F1C" stroke-width="1.5" fill="none" opacity="0.7"/>
+            <path class="steam-line" d="M178 120 Q183 110 178 100" stroke="#FF9F1C" stroke-width="1.5" fill="none" opacity="0.7"/>
+          </svg>
+        </div>
+
+        <!-- Telemetry Display panel -->
+        <div class="telemetry-overlay">
+          <div class="telemetry-row">
+            <span>DRONE ID</span>
+            <span class="telemetry-val">AD-909</span>
+          </div>
+          <div class="telemetry-row">
+            <span>ALTITUDE</span>
+            <span class="telemetry-val">42.8 M</span>
+          </div>
+          <div class="telemetry-row">
+            <span>POD TEMP</span>
+            <span class="telemetry-val">78.4°C</span>
+          </div>
+          <div class="telemetry-row">
+            <span>STATUS</span>
+            <span class="telemetry-val" style="color:var(--accent-green);">
+              <span class="pulsing-indicator"></span>Baking Mid-Air
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES / TECHNOLOGY SECTION -->
+  <section class="section" id="features" style="background: rgba(255,255,255,0.01);">
+    <div class="section-header reveal">
+      <span class="section-badge">Autonomous Ghee Logistics</span>
+      <h2 class="section-title">The Physics of Crispiness</h2>
+      <p class="section-subtitle">We solved the moisture problem. Standard delivery makes dosas soggy. AirDosa launches custom drones optimized to deliver the perfect golden crunch.</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Feature Card 1 -->
+      <div class="feature-card reveal delay-1">
+        <div class="card-icon-wrapper">
+          <i data-lucide="cpu"></i>
+        </div>
+        <h3>Batter AI™ Modeling</h3>
+        <p>Our machine learning models constantly analyze ambient pressure, wind shear, and relative humidity across Bengaluru to alter battery temperature and active yeast kinetics during drone transit.</p>
+      </div>
+
+      <!-- Feature Card 2 -->
+      <div class="feature-card reveal delay-2">
+        <div class="card-icon-wrapper">
+          <i data-lucide="flame"></i>
+        </div>
+        <h3>Active Jetstream Baking</h3>
+        <p>Dosas are cooked mid-flight in carbon-fiber thermal pods. Computer-controlled ventilation forces moist steam out while circulating pre-heated ghee vectors, maintaining a precise crisp-state at 78.4°C.</p>
+      </div>
+
+      <!-- Feature Card 3 -->
+      <div class="feature-card reveal delay-3">
+        <div class="card-icon-wrapper">
+          <i data-lucide="target"></i>
+        </div>
+        <h3>LIDAR Balcony Drops</h3>
+        <p>Armed with solid-state LiDAR sensors and triple-frequency RTK GPS, our autonomous quadcopters execute safe centimeter-level landings to drop off chutney pods onto balconies, terraces, or window sills.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING SECTION -->
+  <section class="section" id="pricing">
+    <div class="section-header reveal">
+      <span class="section-badge">Fuel & Subscription Tiers</span>
+      <h2 class="section-title">Select Your Fuel Plan</h2>
+      <p class="section-subtitle">Whether you're a Sunday family breakfast traditionalist or a high-velocity midnight developer running on dosa carbs.</p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Plan 1 -->
+      <div class="pricing-card reveal delay-1">
+        <div class="plan-header">
+          <h3 class="plan-name">VFR (Pay-As-You-Eat)</h3>
+          <p class="plan-description">Great for casual weekend breakfast warriors.</p>
+          <div class="plan-price">₹99 <span>/ delivery</span></div>
+        </div>
+        
+        <ul class="plan-features">
+          <li><i data-lucide="check-circle-2"></i> Standard drone delivery queue (15 mins)</li>
+          <li><i data-lucide="check-circle-2"></i> Ground level or Balcony drop zone</li>
+          <li><i data-lucide="check-circle-2"></i> Live drone tracking telemetry</li>
+          <li><i data-lucide="check-circle-2"></i> Standard Chutney pod matrix</li>
+          <li style="opacity: 0.5;"><i data-lucide="x-circle" style="color:var(--text-muted)"></i> Sub-3 minute dispatch</li>
+          <li style="opacity: 0.5;"><i data-lucide="x-circle" style="color:var(--text-muted)"></i> Custom crispiness slider</li>
+        </ul>
+
+        <button class="btn btn-secondary" onclick="openOrderModal(event)">
+          Order Delivery
+        </button>
+      </div>
+
+      <!-- Plan 2 -->
+      <div class="pricing-card premium reveal delay-2">
+        <span class="badge-popular">Most Popular</span>
+        <div class="plan-header">
+          <h3 class="plan-name">Super-Sonic Batter</h3>
+          <p class="plan-description">For maximum acceleration. Highly recommended for devs.</p>
+          <div class="plan-price">₹499 <span>/ month</span></div>
+        </div>
+
+        <ul class="plan-features">
+          <li><i data-lucide="check-circle-2"></i> Unlimited zero-delivery fee dispatches</li>
+          <li><i data-lucide="check-circle-2"></i> Priority hypersonic queue (< 4 mins)</li>
+          <li><i data-lucide="check-circle-2"></i> Balcony, Terrace, or Window sill landing</li>
+          <li><i data-lucide="check-circle-2"></i> Dynamic chutney dual-valve injector</li>
+          <li><i data-lucide="check-circle-2"></i> Custom Crispiness Calibration (Levels 1-10)</li>
+          <li><i data-lucide="check-circle-2"></i> Exclusive Podi Dosa & cheese variants</li>
+        </ul>
+
+        <button class="btn btn-primary" onclick="openOrderModal(event)">
+          Activate Autopilot
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="#" class="footer-logo">
+          <i data-lucide="navigation" style="color:var(--primary); margin-right:0.3rem;"></i>
+          <span>AirDosa</span>
+        </a>
+        <p class="footer-desc">Autonomous Ghee-propelled breakfast infrastructure. Baking and drops at speed since 2026.</p>
+        <div class="social-links">
+          <a href="#" class="social-icon" aria-label="Twitter"><i data-lucide="twitter"></i></a>
+          <a href="#" class="social-icon" aria-label="GitHub"><i data-lucide="github"></i></a>
+          <a href="#" class="social-icon" aria-label="Instagram"><i data-lucide="instagram"></i></a>
+        </div>
+      </div>
+      
+      <div class="footer-col">
+        <h4>Telemetry Specs</h4>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">LIDAR Grid</a></li>
+          <li><a href="#" class="footer-link">Batter Viscosity</a></li>
+          <li><a href="#" class="footer-link">Active Thermal Pods</a></li>
+          <li><a href="#" class="footer-link">HAL ATC Clearance</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Legals</h4>
+        <ul class="footer-links">
+          <li><a href="#" class="footer-link">FAA India Rules</a></li>
+          <li><a href="#" class="footer-link">Ghee Spill Protocol</a></li>
+          <li><a href="#" class="footer-link">Balcony Landing Policy</a></li>
+          <li><a href="#" class="footer-link">Privacy Policy</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col footer-newsletter">
+        <h4>Launch Updates</h4>
+        <p>Subscribe to know when drone launching covers your pin-code.</p>
+        <form class="newsletter-form" onsubmit="event.preventDefault(); alert('Subscribed! Drones are warming up for your neighborhood.');">
+          <input type="email" placeholder="Your Email" class="newsletter-input" required>
+          <button type="submit" class="newsletter-btn" aria-label="Subscribe"><i data-lucide="arrow-right"></i></button>
+        </form>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <p>&copy; 2026 AirDosa Technologies Pvt. Ltd. All rights reserved.</p>
+      <div class="footer-egg">
+        <span>Engineered with</span>
+        <i data-lucide="heart"></i>
+        <span>and Ghee in Bengaluru</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- FLOATING CTA BUTTON -->
+  <button class="floating-cta" onclick="openOrderModal(event)" id="floatingCta">
+    <i data-lucide="shopping-bag"></i> Order Now
+  </button>
+
+  <!-- INTERACTIVE MODAL (DOSA CONFIGURATOR & SIMULATION) -->
+  <div class="modal-backdrop" id="orderModal">
+    <div class="modal-container">
+      <button class="modal-close" onclick="closeOrderModal()"><i data-lucide="x"></i></button>
+      
+      <!-- STEP 1: CONFIGURATION FORM -->
+      <div class="modal-step-1" id="configuratorStep">
+        <h3 class="modal-title">Assemble Payload</h3>
+        <p class="modal-subtitle">Calibrate drone baking matrices and chutney configurations.</p>
+        
+        <form id="dosaConfigForm" onsubmit="initiateFlight(event)">
+          <!-- Dosa style selection -->
+          <div class="form-group">
+            <label class="form-label">Dosa Profile</label>
+            <div class="option-grid">
+              <div class="option-card selected" onclick="selectDosaProfile(this, 'classic', 110)">
+                <i data-lucide="sparkles" style="width:24px; height:24px;"></i>
+                <span class="option-card-title">Classic Masala</span>
+                <span style="font-size:0.8rem; color:var(--text-muted)">₹110</span>
+              </div>
+              <div class="option-card" onclick="selectDosaProfile(this, 'cheese', 140)">
+                <i data-lucide="layers" style="width:24px; height:24px;"></i>
+                <span class="option-card-title">Cheese Chili</span>
+                <span style="font-size:0.8rem; color:var(--text-muted)">₹140</span>
+              </div>
+              <div class="option-card" onclick="selectDosaProfile(this, 'podi', 130)">
+                <i data-lucide="flame" style="width:24px; height:24px;"></i>
+                <span class="option-card-title">Ghee Podi</span>
+                <span style="font-size:0.8rem; color:var(--text-muted)">₹130</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Crispiness slider -->
+          <div class="form-group">
+            <label class="form-label">Crispiness Quotient: <span id="crispLabel" class="crisp-level-tag">Golden Classic (Lv. 5)</span></label>
+            <div class="slider-container">
+              <input type="range" min="1" max="10" value="5" class="custom-slider" id="crispSlider" oninput="updateCrispLevel(this.value)">
+              <div class="slider-metrics">
+                <span>Soft (Lv. 1)</span>
+                <span>Glass-Shatter (Lv. 10)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chutney Payload checkboxes -->
+          <div class="form-group">
+            <label class="form-label">Chutney Compartments (Included)</label>
+            <div class="chutney-grid">
+              <div class="chutney-item selected" onclick="toggleChutney(this)">
+                <div class="chutney-indicator"></div>
+                <span>Coconut Chutney</span>
+              </div>
+              <div class="chutney-item selected" onclick="toggleChutney(this)">
+                <div class="chutney-indicator"></div>
+                <span>Spicy Tomato</span>
+              </div>
+              <div class="chutney-item" onclick="toggleChutney(this)">
+                <div class="chutney-indicator"></div>
+                <span>Ghee Sambar Pod</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Address selection -->
+          <div class="form-group">
+            <label class="form-label" for="deliveryTarget">LIDAR Coordinate Target</label>
+            <select id="deliveryTarget" class="newsletter-input" style="width:100%; border-radius:12px; margin-top:0.2rem;" required>
+              <option value="HSR">HSR Layout (Sector 3, Balcony Pod B)</option>
+              <option value="Indiranagar">Indiranagar (100ft Rd, Terrace Target A)</option>
+              <option value="Koramangala">Koramangala (5th Block, Window Sill C)</option>
+              <option value="Whitefield">Whitefield (EPIP Zone, Tech Balcony 12)</option>
+            </select>
+          </div>
+
+          <!-- Order button -->
+          <div class="order-summary">
+            <div class="total-price">
+              <span style="font-size:0.9rem; color:var(--text-muted); display:block; font-weight:500;">Payload Total</span>
+              ₹<span id="priceText">110</span> <span>(Inc. GST)</span>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              <i data-lucide="rocket"></i> Launch Flight Pod
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- STEP 2: TELEMETRY AND RADAR SIMULATOR -->
+      <div class="modal-step-2" id="telemetryStep">
+        <h3 class="modal-title">Live Delivery Telemetry</h3>
+        <p class="modal-subtitle">Tracking Drone Pod flight vector & crispness-baking profile.</p>
+
+        <!-- Simulated Vector Radar Map -->
+        <div class="radar-map-wrapper">
+          <div class="radar-grid"></div>
+          <div class="radar-ring rr-1"></div>
+          <div class="radar-ring rr-2"></div>
+          <div class="radar-ring rr-3"></div>
+          <div class="radar-sweep-simulation"></div>
+          
+          <!-- Flight Path Canvas/SVG -->
+          <svg class="flight-path-svg">
+            <path id="radarFlightPath" d="" class="flight-path-draw" />
+          </svg>
+
+          <!-- Beacons -->
+          <div class="beacon beacon-src" style="top: 80%; left: 20%;">
+            <span class="beacon-label">HQ-HSR</span>
+          </div>
+          <div class="beacon beacon-dest" style="top: 25%; left: 75%;">
+            <span class="beacon-label" id="destLabel">YOUR BALCONY</span>
+          </div>
+
+          <!-- Drone icon following path -->
+          <div class="drone-sim-icon" id="simDrone">
+            <i data-lucide="navigation"></i>
+          </div>
+        </div>
+
+        <!-- Progress bar and indicators -->
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="simProgress"></div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; margin-bottom:1.5rem; font-size:0.8rem; font-family:monospace;">
+          <div>ALTITUDE: <span id="simAlt" style="color:var(--secondary)">0 M</span></div>
+          <div>POD TEMP: <span id="simTemp" style="color:var(--primary)">78.4°C</span></div>
+          <div>ETA: <span id="simEta" style="color:var(--accent-green)">12s</span></div>
+        </div>
+
+        <!-- Terminal Console Log Output -->
+        <div class="console-log" id="consoleLog">
+          <!-- Log lines populated dynamically -->
+        </div>
+
+        <div style="text-align:right;">
+          <button class="btn btn-secondary" onclick="resetConfigurator()" id="btnReturn" style="display:none;">
+            Return to Launchpad
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* --------------------------------------------------
+       NAVBAR BACKGROUND SCROLL EFFECT
+       -------------------------------------------------- */
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('navbar');
+      const floatingCta = document.getElementById('floatingCta');
+      
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+
+      // Hide floating CTA near the footer
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = document.documentElement.clientHeight;
+      if (window.scrollY + clientHeight > scrollHeight - 200) {
+        floatingCta.style.opacity = '0';
+        floatingCta.style.pointerEvents = 'none';
+      } else {
+        floatingCta.style.opacity = '1';
+        floatingCta.style.pointerEvents = 'all';
+      }
+    });
+
+    /* --------------------------------------------------
+       MOBILE NAV DRAWER TOGGLE
+       -------------------------------------------------- */
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    const menuIcon = document.getElementById('menuIcon');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      const isOpen = navLinks.classList.contains('active');
+      menuIcon.setAttribute('data-lucide', isOpen ? 'x' : 'menu');
+      lucide.createIcons();
+    });
+
+    // Close mobile nav when clicking a link
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        menuIcon.setAttribute('data-lucide', 'menu');
+        lucide.createIcons();
+      });
+    });
+
+    /* --------------------------------------------------
+       SCROLL REVEAL INTERSECTION OBSERVER
+       -------------------------------------------------- */
+    const revealElements = document.querySelectorAll('.reveal');
+    const observerOptions = {
+      root: null,
+      threshold: 0.15,
+      rootMargin: "0px 0px -50px 0px"
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    revealElements.forEach(el => observer.observe(el));
+
+    /* --------------------------------------------------
+       FEATURE CARDS MOUSE GLOW EFFECT
+       -------------------------------------------------- */
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        card.style.setProperty('--mouse-x', `${x}px`);
+        card.style.setProperty('--mouse-y', `${y}px`);
+      });
+    });
+
+    /* --------------------------------------------------
+       INTERACTIVE DOSA CONFIGURATOR STATE & LOGIC
+       -------------------------------------------------- */
+    const modal = document.getElementById('orderModal');
+    const configStep = document.getElementById('configuratorStep');
+    const telemetryStep = document.getElementById('telemetryStep');
+    const priceText = document.getElementById('priceText');
+    const crispSlider = document.getElementById('crispSlider');
+    const crispLabel = document.getElementById('crispLabel');
+    const deliveryTargetSelect = document.getElementById('deliveryTarget');
+
+    let currentBasePrice = 110;
+    let selectedChutneys = ['Coconut Chutney', 'Spicy Tomato'];
+    let selectedCrispText = "Golden Classic";
+
+    // Open & Close Modal
+    function openOrderModal(e) {
+      e.preventDefault();
+      modal.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeOrderModal() {
+      modal.classList.remove('open');
+      document.body.style.overflow = '';
+      setTimeout(resetConfigurator, 400);
+    }
+
+    // Select Dosa Type (Step 1)
+    function selectDosaProfile(element, type, price) {
+      // Toggle selected class on card
+      document.querySelectorAll('.option-card').forEach(card => {
+        card.classList.remove('selected');
+      });
+      element.classList.add('selected');
+      
+      currentBasePrice = price;
+      updatePrice();
+    }
+
+    // Chutney Checkbox Selectors
+    function toggleChutney(element) {
+      element.classList.toggle('selected');
+      const chutneyName = element.querySelector('span').innerText;
+      
+      if (element.classList.contains('selected')) {
+        if (!selectedChutneys.includes(chutneyName)) {
+          selectedChutneys.push(chutneyName);
+        }
+      } else {
+        selectedChutneys = selectedChutneys.filter(c => c !== chutneyName);
+      }
+      updatePrice();
+    }
+
+    // Update Price calculation
+    function updatePrice() {
+      // Base + ₹10 for extra chutneys if count > 2
+      let extraPrice = 0;
+      if (selectedChutneys.length > 2) {
+        extraPrice = (selectedChutneys.length - 2) * 15;
+      }
+      priceText.innerText = currentBasePrice + extraPrice;
+    }
+
+    // Adjust Crispiness Level Slider
+    function updateCrispLevel(value) {
+      const level = parseInt(value);
+      if (level <= 2) {
+        selectedCrispText = "Soft & Spongy (Davangere Style)";
+      } else if (level <= 4) {
+        selectedCrispText = "Medium Soft";
+      } else if (level <= 6) {
+        selectedCrispText = "Golden Classic Crisp";
+      } else if (level <= 8) {
+        selectedCrispText = "Extra Crunchy (Ghee Loaded)";
+      } else {
+        selectedCrispText = "Shatter-Crisp (Goggles Recommended!)";
+      }
+      crispLabel.innerText = `${selectedCrispText} (Lv. ${level})`;
+    }
+
+    /* --------------------------------------------------
+       FLIGHT PATH TELEMETRY SIMULATION (Step 2)
+       -------------------------------------------------- */
+    let simInterval;
+
+    function initiateFlight(e) {
+      e.preventDefault();
+      
+      // Update Target Destination label
+      const destination = deliveryTargetSelect.value;
+      document.getElementById('destLabel').innerText = `TARGET-${destination.toUpperCase()}`;
+
+      // Switch steps
+      configStep.style.display = 'none';
+      telemetryStep.style.display = 'block';
+
+      // Setup Simulated Flight Map Path (SVG geometry coordinates)
+      const flightPath = document.getElementById('radarFlightPath');
+      const simDrone = document.getElementById('simDrone');
+      simDrone.style.display = 'block';
+
+      // Source HQ is (20%, 80%) on 100% bounds
+      // Destination is (75%, 25%) on 100% bounds
+      // Let's set absolute coordinate offsets based on standard size 600x250
+      // Src: X = 120, Y = 200
+      // Dst: X = 450, Y = 62.5
+      const srcX = 120;
+      const srcY = 200;
+      const dstX = 450;
+      const dstY = 62;
+      
+      // Create a nice smooth S-curve for the flight
+      const pathData = `M ${srcX} ${srcY} C ${srcX + 150} ${srcY}, ${dstX - 150} ${dstY}, ${dstX} ${dstY}`;
+      flightPath.setAttribute('d', pathData);
+
+      // Start path animation
+      const pathLength = flightPath.getTotalLength();
+      flightPath.style.strokeDasharray = pathLength;
+      flightPath.style.strokeDashoffset = pathLength;
+
+      // Start Console logs
+      const consoleLog = document.getElementById('consoleLog');
+      consoleLog.innerHTML = "";
+      addConsoleLine("Initializing batter thermal profiles...", "info");
+
+      let progress = 0;
+      const totalSteps = 100;
+      const duration = 8000; // 8 seconds flight
+      const startTime = Date.now();
+
+      const logTimes = {
+        5: "Batter injected into mid-air baking chamber.",
+        15: "Propulsion armed. HAL Airport ATC cleared flight corridor.",
+        30: "Quadcopter lift-off completed. Alt: 12m. Speed: 25 km/h.",
+        50: "Thermal Pod active: internal chamber cooking at 78.4°C.",
+        70: "Descending towards target balcony beacon. Wind correction active.",
+        85: "LIDAR mapping active. Clear of tree lines and wires.",
+        96: "Drop-off valve opened. Sambar container secured.",
+        100: "Delivery complete! Ghee Crisp optimization successful."
+      };
+
+      // Reset return button
+      document.getElementById('btnReturn').style.display = 'none';
+
+      // Telemetry variables
+      const altSpan = document.getElementById('simAlt');
+      const tempSpan = document.getElementById('simTemp');
+      const etaSpan = document.getElementById('simEta');
+      const progressBar = document.getElementById('simProgress');
+
+      simInterval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        progress = Math.min((elapsed / duration) * 100, 100);
+
+        // Update progress bar
+        progressBar.style.width = `${progress}%`;
+
+        // Update flight path offset drawing
+        const drawOffset = pathLength - (pathLength * (progress / 100));
+        flightPath.style.strokeDashoffset = drawOffset;
+
+        // Position simulator drone icon along the curve
+        const point = flightPath.getPointAtLength(pathLength * (progress / 100));
+        simDrone.style.left = `${(point.x / 600) * 100}%`;
+        simDrone.style.top = `${(point.y / 250) * 100}%`;
+        
+        // Calculate angle of flight direction (tangent vector)
+        if (progress < 99) {
+          const nextPoint = flightPath.getPointAtLength(pathLength * ((progress + 1) / 100));
+          const angle = Math.atan2(nextPoint.y - point.y, nextPoint.x - point.x) * 180 / Math.PI;
+          simDrone.style.transform = `translate(-50%, -50%) rotate(${angle + 90}deg)`;
+        }
+
+        // Live Telemetry numbers
+        let currentAlt = 0;
+        if (progress < 15) currentAlt = (progress / 15) * 45;
+        else if (progress < 80) currentAlt = 45 + Math.sin(progress / 10) * 3;
+        else currentAlt = Math.max(0, 45 - ((progress - 80) / 20) * 45);
+
+        let currentTemp = 25 + (Math.min(progress, 50) / 50) * 53.4;
+        if (progress >= 50) currentTemp = 78.4 + Math.sin(progress) * 0.2;
+
+        const currentEta = Math.ceil(((duration - elapsed) / 1000));
+
+        altSpan.innerText = `${currentAlt.toFixed(1)} M`;
+        tempSpan.innerText = `${currentTemp.toFixed(1)}°C`;
+        etaSpan.innerText = progress >= 100 ? "Arrived" : `${currentEta}s`;
+
+        // Print log lines at intervals
+        const progressInt = Math.floor(progress);
+        for (let pct in logTimes) {
+          if (progressInt >= parseInt(pct) && logTimes[pct]) {
+            const isSuccess = pct == "100";
+            addConsoleLine(logTimes[pct], isSuccess ? "success" : "info");
+            delete logTimes[pct]; // Print once
+          }
+        }
+
+        if (progress >= 100) {
+          clearInterval(simInterval);
+          document.getElementById('btnReturn').style.display = 'inline-block';
+        }
+      }, 50);
+    }
+
+    function addConsoleLine(text, type) {
+      const consoleLog = document.getElementById('consoleLog');
+      const now = new Date();
+      const timeStr = now.toTimeString().split(' ')[0];
+
+      const line = document.createElement('div');
+      line.className = 'console-line';
+      
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'console-time';
+      timeSpan.innerText = `[${timeStr}]`;
+      
+      const textSpan = document.createElement('span');
+      if (type === 'success') {
+        textSpan.className = 'console-success';
+      }
+      textSpan.innerText = text;
+
+      line.appendChild(timeSpan);
+      line.appendChild(textSpan);
+      consoleLog.appendChild(line);
+      consoleLog.scrollTop = consoleLog.scrollHeight;
+    }
+
+    function resetConfigurator() {
+      clearInterval(simInterval);
+      configStep.style.display = 'block';
+      telemetryStep.style.display = 'none';
+      document.getElementById('simProgress').style.width = '0%';
+      document.getElementById('simDrone').style.display = 'none';
+    }
+
+    // Initialize Lucide Icons
+    lucide.createIcons();
+  </script>
+</body>
+</html>
